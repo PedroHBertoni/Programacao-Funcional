@@ -1,33 +1,53 @@
 1) O que é um literal?
-
+Um valor que pode ser tratado pela linguagem de programação como um tipo primitivo, como Int, Float, ...
 
 2) O que é uma função primitiva?
-3) O que é uma expressão?
-4) O que significa avaliar uma expressão?
-5) Qual é a regra de avaliação para uma chamada de função?
-6) Qual é a regra de avaliação para uma expressão case?
-7) Qual é o propósito de uma definição?
-8) O que é uma função?
-9) A ordem que as expressões em uma chamada de função são avaliadas pode alterar o valor da chamada
-da função? Explique.
-10) O que é uma definição com autorreferência? E um processo recursivo?
+É uma função presente diretamente na linguagem pelos operadores matemáticos, de texto e lógicos.
 
+3) O que é uma expressão?
+Representação do resultado da sua análise, retorno de valores, funções ou resultados.
+
+4) O que significa avaliar uma expressão?
+Chegar no seu resultado a ser "retornado" como resposta da expressão.
+
+5) Qual é a regra de avaliação para uma chamada de função?
+Chegar no resultado aplicando seu operador sobre os operandos da chamada da função, cada vez mais reduzida até chegar no resultado geral.
+
+6) Qual é a regra de avaliação para uma expressão case?
+É avaliada a expressão passada e comparada com o valor True, caso bata, então substitui toda a expressão pelo caso de True, senão substitui pelo caso de False.
+
+7) Qual é o propósito de uma definição?
+Trazer um nome mais comunicável e utilizável durante seu código para valores e chamadas.
+
+8) O que é uma função?
+Um conjunto de expressões que recebe, um número arbitrário de entradas, e traz um valor como saída
+
+9) A ordem que as expressões em uma chamada de função são avaliadas pode alterar o valor da chamada da função? Explique.
+Não, o gleam possui uma ordem de avaliação ansiosa, onde as avaliações são feitas assim que possível, mas traz mesmos resultados de uma avaliação em ordem normal
+
+10) O que é uma definição com autorreferência? E um processo recursivo?
+Uma definição a qual chama a si mesma no seu corpo, ou seja, pode possuir um tamanho arbitrário com chamadas de si própria.
+Já o Processo recursivo é a avaliação de definições com autorreferência, trazendo uma análise interna para cada chamada de si mesma.
 
 
 
 18) [sicp 1.4] O modelo de avaliação visto em sala permite que os operadores em chamadas de funções sejam
 expressões compostas. Use esta observação para descrever o comportamento do seguinte procedimento:
+
 fn a_plus_abs_b(a, b) {
 case b > 0 {
-
-2
-
 True -> int.add
 False -> int.subtract
 }(a, b)
 }
+
+Verifica o sinal de b, se for positivo, soma com a diretamente, caso seja negativo, subtrai de a para assim também representar uma soma com seu valor absoluto.
+Ou seja, retorna a soma de a com o valor absoluto de b.
+
+
 19) [sicp 1.5] Ben Bitdiddle inventou um método para determinar se um interpretador está usando avaliação
 com ordem aplicativa ou avaliação com ordem normal. Ele definiu os seguintes procedimentos:
+
 fn p() {
 p()
 }
@@ -37,8 +57,14 @@ True -> 0
 False -> y
 }
 }
+
 Então avaliou a seguinte expressão
 teste(0, p())
 Qual é o comportamento que Ben irá observar com um interpretador que usa avaliação com ordem
 aplicativa? Qual é o comportamento que ele irá observar com um interpretador que usa avaliação com
 ordem normal? Explique a sua resposta.
+
+Caso seja de ordem aplicativa, a chamada da função teste() analisará o case diretamente e entrará no caso de x == 0 sendo True, retornando 0 na chamada.
+Caso seja de ordem normal, a chamada da função possui uma chamada da função p() a qual será reduzida de imediato, mas sem sucesso gerando um erro de recursividade infinita.
+
+
