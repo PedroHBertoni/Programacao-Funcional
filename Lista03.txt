@@ -1,0 +1,35 @@
+1) Quais são as etapas do processo de projeto de funções?
+Primeiramente, análise, definição dos tipos de dados, especificação, implementação, verificação
+  
+2) Qual é o propósito da análise?
+Reconhecer quais requisitos deverão aparecer e pensar como transformá-los no resultado pressuposto pelo problema
+  
+3) Qual é o propósito da definição dos tipos de dados?
+Definir, com clareza, os dados necessários para resolução do problema e como serão representados para poderem
+  
+4) Quais são as partes que compõem a especificação de uma função?
+A Assinatura para chamar a função, a explicação do que traz como resultado e exemplos de uso
+  
+5) Qual é a principal propriedade que uma especificação deve ter para ser considerada adequada?
+Uma compreensão direta do que ser feito na implementação sem necessariamente interpretar o problema
+
+6) O que é a assinatura de uma função?
+O seu "nome" pela qual será chamada durante o coódigo/utilização, com os nomes e tipagem dos dados apresentados na implementação
+  
+7) Qual é o objetivo inicial dos exemplos no projeto de uma função? E os demais objetivos?
+Mostrar para o projetista qual serão as saídas para certas entradas, para encontrar uma função, além de ilustrar melhor a especificação e deixar testes prontos para a verificação
+  
+8) Se não forem encontrados erros na verificação para os exemplos da especificação, é possível afirmar que a função está isenta de erros? Explique.
+Não, pois não há garantia de que sua verificação passou por exemplos nichados para situações de erros comums ou, melhor ainda, por todos os casos. Ela deve ser ampliada
+  
+9) A implementação é a fase mais importante do projeto de funções, verdadeiro ou falso? Explique.
+Falso, cada etapa depende uma da outra, ou seja possuem importância relativa. Uma implementação sem verificação traz uma função repleta de erros
+  
+10) Como proceder quando um teste falha?
+Entender se foi um exemplo errado, uma implementação, ou os dois, para depois corrigir sua origem
+  
+11) Qual é o objetivo da revisão?
+Uma melhora das etapas anteriores, uma especificação mais simples, melhores nomes dos dados, possíveis abstrações e principalmente na implementação generalizando casos
+  
+12) Qual é a diferença do resultado da análise e a descrição do propósito da função?
+a análise traz a ideia do que será implementado na função, já o propósito trata melhor sobre sua utilização
