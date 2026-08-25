@@ -119,3 +119,44 @@ pub fn formata_ponto_examples() {
   check.eq(formata_ponto("Olá Mundo."), "Olá Mundo.")
   check.eq(formata_ponto(""), ".")
 }
+
+/// Retorna True se *palavra* tem um '-' na sua escrita.
+pub fn verifica_traco(palavra: String) -> Bool {
+  case string.slice(palavra, 0, 1) == "" {
+    True -> False
+    False ->
+      case string.slice(palavra, 0, 1) == "-" {
+        True -> True
+        False ->
+          verifica_traco(string.slice(palavra, 1, string.length(palavra)))
+      }
+  }
+}
+
+pub fn verifica_traco_examples() {
+  check.eq(verifica_traco("lero-lero"), True)
+  check.eq(verifica_traco("girassol"), False)
+  check.eq(verifica_traco("Guarda-Chuva"), True)
+}
+
+/// Retorna qual entre *num1*, *num2* e *num3* representa maior valor
+pub fn retorna_maior(num1: Int, num2: Int, num3: Int) -> Int {
+  case num1 > num2 {
+    True ->
+      case num1 > num3 {
+        True -> num1
+        False -> num3
+      }
+    False ->
+      case num2 > num3 {
+        True -> num2
+        False -> num3
+      }
+  }
+}
+
+pub fn retorna_maior_examples() {
+  check.eq(retorna_maior(1, 2, 3), 3)
+  check.eq(retorna_maior(3, 2, 1), 3)
+  check.eq(retorna_maior(1, 3, 2), 3)
+}
