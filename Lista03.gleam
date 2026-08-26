@@ -1,3 +1,5 @@
+import gleam/float
+import gleam/int
 import gleam/string
 import sgleam/check
 
@@ -289,9 +291,119 @@ pub fn verifica_duplicacao_examples() {
   check.eq(verifica_duplicacao("arara"), False)
 }
 
-
 /// 26)
 /// Retorna o número de azulejos inteiros necessários para ocupar
 /// uma área de acordo com *altura* e *comprimento*. Azulejos que
 /// não são usados inteiramente ainda são contados.
-pub fn calcula_azulejos(altura: Float, comprimento: Float) -> Int
+pub fn calcula_azulejos(altura: Float, comprimento: Float) -> Int {
+  float.round(
+    float.ceiling(altura /. 20.0) *. float.ceiling(comprimento /. 20.0),
+  )
+}
+
+pub fn calcula_azulejos_examples() {
+  check.eq(calcula_azulejos(20.0, 19.9), 1)
+  check.eq(calcula_azulejos(20.0, 20.0), 1)
+  check.eq(calcula_azulejos(20.0, 21.0), 2)
+  check.eq(calcula_azulejos(21.0, 21.0), 4)
+}
+
+/// 27)
+/// Mostra como fica *palavra* colocando seu último caracteres no
+/// início *n* vezes, criando uma rotação.
+/// Requer *n* não negativo.
+pub fn rotaciona_palavra(palavra: String, n: Int) -> String {
+  let resto = n % string.length(palavra)
+  string.slice(palavra, string.length(palavra) - resto, resto)
+  <> string.slice(palavra, 0, string.length(palavra) - resto)
+}
+
+pub fn rotaciona_palavra_examples() {
+  check.eq(rotaciona_palavra("marcelio", 5), "celiomar")
+  check.eq(rotaciona_palavra("marcelio", 13), "celiomar")
+  check.eq(rotaciona_palavra("marcelio", 0), "marcelio")
+}
+
+/// 28)
+/// Formata *telefone* para que possua 9 dígitos no seu número
+/// principal, adicionando "9" como primeiro, caso possua 8 dígitos.
+/// Recebe como entrada "(dd) xxxx-xxxx" ou "(dd) xxxxx-xxxx".
+pub fn formata_telefone(telefone: String) -> String {
+  case string.length(telefone) == 15 {
+    True -> telefone
+    False -> string.slice(telefone, 0, 5) <> "9" <> string.slice(telefone, 5, 9)
+  }
+}
+
+pub fn formata_telefone_examples() {
+  check.eq(formata_telefone("(44) 9787-1241"), "(44) 99787-1241")
+  check.eq(formata_telefone("(51) 95872-9989"), "(51) 95872-9989")
+  check.eq(formata_telefone("(41) 8876-1562"), "(41) 98876-1562")
+}
+
+/// 29)
+/// Mostra como ficaria *mensagem* com espaço para *tamanho*
+/// caracteres, os quais são rotacionados por dígito de acordo
+/// com *momento*. Depois da primeira mensagem há um espaço " "
+/// para próxima repetição.
+pub fn letreiro(mensagem: String, tamanho: Int, momento: Int) -> String {
+  string.slice(
+    mensagem <> " " <> mensagem,
+    { momento % string.length(mensagem) },
+    tamanho,
+  )
+}
+
+pub fn letreiro_examples() {
+  check.eq(
+    letreiro("Promoção de sorvetes, pague 2 leve 3!", 20, 0),
+    "Promoção de sorvetes",
+  )
+  check.eq(
+    letreiro("Promoção de sorvetes, pague 2 leve 3!", 20, 1),
+    "romoção de sorvetes,",
+  )
+  check.eq(
+    letreiro("Promoção de sorvetes, pague 2 leve 3!", 20, 2),
+    "omoção de sorvetes, ",
+  )
+  check.eq(
+    letreiro("Promoção de sorvetes, pague 2 leve 3!", 20, 17),
+    "tes, pague 2 leve 3!",
+  )
+  check.eq(
+    letreiro("Promoção de sorvetes, pague 2 leve 3!", 20, 18),
+    "es, pague 2 leve 3! ",
+  )
+  check.eq(
+    letreiro("Promoção de sorvetes, pague 2 leve 3!", 20, 19),
+    "s, pague 2 leve 3! P",
+  )
+}
+
+/// 30)
+/// Verifica se *num* lido da esquerda pra direita, e ao
+/// contrário, se mantém igual. Requer que tenha 4 dígitos.
+pub fn num_palindromo_quatro(num: Int) -> Bool {
+  num / 100 == { { num % 10 } * 10 } + { { num % 100 } / 10 }
+}
+
+/// Verifica se *num* lido da esquerda pra direita, e ao
+/// contrário, se mantém igual.
+pub fn num_palindromo(num: Int) -> Bool {
+  let buffer = int.to_string(num)
+  buffer == string.reverse(buffer)
+}
+
+pub fn num_palindromo_examples() {
+  check.eq(num_palindromo_quatro(9119), True)
+  check.eq(num_palindromo(9119), True)
+  check.eq(num_palindromo_quatro(0110), True)
+  check.eq(num_palindromo(0110), False)
+  check.eq(num_palindromo_quatro(0101), False)
+  check.eq(num_palindromo(0101), True)
+  check.eq(num_palindromo(101), True)
+  check.eq(num_palindromo(11), True)
+  check.eq(num_palindromo(1), True)
+  check.eq(num_palindromo(12_321), True)
+}
