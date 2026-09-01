@@ -1,0 +1,25 @@
+1) O que é um tipo de dado?
+São todos os valores que uma variável desse tipo pode assumir
+
+2) Qual é o propósito da etapa de definição de tipos de dados no processo de projeto de funções?
+Identificar quais informações devem ser passadas e definir suas representações de modo a serem manipuladas
+
+3) Quais são os princípios que podemos utilizar para determinar se um tipo de dado é adequado para representar uma informação?
+Analisar se todos os valores válidos estão representáveis e os inválidos inalcançáveis
+
+4) Quando devemos utilizar estruturas para representar informações?
+Quando é necessário representar mais de uma informação em conjunto, que podem ser decompostas e manipuladas
+
+5) Como modificar o valor de um campo de uma instância de uma estrutura? Explique.
+Não é possível, o meio com esse intuito consiste em criar uma cópia com demais campos mantidos e apenas o campo desejado alterado
+
+6) Quando devemos utilizar enumerações para representar informações?
+Quando os valores válidos são um número representável
+
+7) O que são tipos algébricos de dados?
+São tipos de dados de união(soma) e estrutura(produto) juntando
+
+8) De que forma enumerações e uniões como entrada para funções guiam a criação dos exemplos e a implementação da função?
+T
+
+9) Quando devemos utilizar uniões para representar informações?
