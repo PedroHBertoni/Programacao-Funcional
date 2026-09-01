@@ -78,3 +78,11 @@ pub fn alteracao_valida(atual: Elevador, futuro: Elevador) -> Bool {
     _, _ -> True
   }
 }
+
+/// 12) Resolução de Telas
+pub type Resolucao{
+  Resolucao(altura: Int, largura, Int)
+}
+
+/// Calcula quantos mega-pixels tem uma imagem na sua resolução
+pub fn mega_pixels(tamanho: Resolucao)
