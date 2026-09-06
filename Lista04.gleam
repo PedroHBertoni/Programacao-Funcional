@@ -236,4 +236,22 @@ pub fn resultado(n1: Float, n2: Float, n3: Float, n4: Float) -> Situacao {
   }
 }
 
-/// 17) 
+/// 17) Bandeira tarifária
+pub type Bandeira {
+  Verde
+  Amarelo
+  Vermelho1
+  Vermelho2
+}
+
+/// Calcula o valor final de custos, com o acréscimo para kwat-hora feitos Verde
+/// não tem aumento, amarelo tem aumento de 0,01874 reais, vermelho patamar 1 tem
+/// aumento de 0,03971 reais e patamar 2 com aumento de 0,09492 reais.
+pub fn custo_energia(consumo: Float, tarifa: Float, bandeira: Bandeira) -> Float {
+  case bandeira {
+    Verde -> tarifa
+    Amarelo -> tarifa +. { 0.01874 *. consumo }
+    Vermelho1 -> tarifa +. { 0.03971 *. consumo }
+    Vermelho2 -> tarifa +. { 0.09492 *. consumo }
+  }
+}
