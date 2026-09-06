@@ -255,3 +255,87 @@ pub fn custo_energia(consumo: Float, tarifa: Float, bandeira: Bandeira) -> Float
     Vermelho2 -> tarifa +. { 0.09492 *. consumo }
   }
 }
+
+/// 18) Jokenpo
+pub type Jokenpo {
+  Pedra
+  Papel
+  Tesoura
+}
+
+/// Determina quem ganhou entre *jogador1* ou *jogador2* baseado nas regras de uma
+/// partida de Jokenpo
+/// Pedra - Pedra -> Empate
+/// Pedra - Papel -> 2
+/// Pedra - Tesoura -> 1
+/// Papel - Pedra -> 1
+/// Papel - Papel -> Empate
+/// Papel - Tesoura -> 2
+/// Tesoura - Pedra -> 2
+/// Tesoura - Papel -> 1
+/// Tesoura - Tesoura -> Empate
+pub fn ganhador(
+  jogador1: String,
+  jogada1: Jokenpo,
+  jogador2: String,
+  jogada2: Jokenpo,
+) -> String {
+  case jogada1, jogada2 {
+    Pedra, Papel -> jogador2
+    Pedra, Tesoura -> jogador1
+    Papel, Tesoura -> jogador2
+    Papel, Pedra -> jogador1
+    Tesoura, Pedra -> jogador2
+    Tesoura, Papel -> jogador1
+    _, _ -> "Empate"
+  }
+}
+
+/// 19) Desempenho Futebol
+pub type Placar {
+  Placar(feitos: Int, sofridos: Int)
+}
+
+/// Atualiza os *pontos* de um time com base no último placar
+pub fn att_desempenho(pontos: Int, jogo: Placar) -> Int {
+  case jogo.feitos > jogo.sofridos {
+    True -> pontos + 3
+    False ->
+      case jogo.feitos == jogo.sofridos {
+        True -> pontos + 1
+        False -> pontos
+      }
+  }
+}
+
+/// 20) Duração em segundos
+pub type Duracao {
+  Duracao(horas: Int, minutos: Int, segundos: Int)
+}
+
+/// Converte *duracao* em segundos para uma Duracao com horário simplificado
+/// em horas, minutos e segundos
+pub fn conversao(duracao: Int) -> Duracao {
+  let horas: Int = duracao / 3600
+  let min: Int = { duracao - horas * 3600 } / 60
+  let segs: Int = duracao - horas * 3600 - min * 60
+  Duracao(horas, min, segs)
+}
+
+/// Traz uma visualização de uma Duracao em String, ignorando valores nulos
+pub fn relogio(horario: Duracao) -> String {
+  case horario.horas == 0 {
+    True -> ""
+    False -> int.to_string(horario.horas) <> "h : "
+  }
+  <> case horario.minutos == 0 {
+    True -> ""
+    False -> int.to_string(horario.minutos) <> "m : "
+  }
+  <> case horario.segundos == 0 {
+    True -> ""
+    False -> int.to_string(horario.segundos) <> "s"
+  }
+}
+
+/// 21)
