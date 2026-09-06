@@ -1,6 +1,8 @@
 /// import sgleam/check
 import gleam/float
+import gleam/int
 import gleam/option.{type Option, None}
+import gleam/string
 
 /// 10) Direções Cardeais
 pub type Direcao {
@@ -119,12 +121,16 @@ pub fn figura_espaco(fig1: Figura, fig2: Figura) -> Bool {
   case fig1, fig2 {
     Retangulo(_, _), Retangulo(_, _) ->
       fig1.altura <=. fig2.altura && fig1.largura <=. fig2.largura
-    Retangulo(_, _), Circulo(_) ->
-          float.power(
-            fig1.altura *. fig1.altura +. fig1.largura *. fig1.largura,
-            0.5,
-          )
-          ]<=. fig2.raio *. 2.0
+
+    Retangulo(_, _), Circulo(_) -> {
+      let assert Ok(diagonal) =
+        float.power(
+          fig1.altura *. fig1.altura +. fig1.largura *. fig1.largura,
+          0.5,
+        )
+
+      diagonal <=. fig2.raio *. 2.0
+    }
 
     Circulo(_), Retangulo(_, _) ->
       fig1.raio *. 2.0 <=. fig2.altura && fig1.raio *. 2.0 <=. fig2.largura
@@ -166,38 +172,68 @@ pub fn possui_desconto(espec: Espectador) -> Bool {
   }
 }
 
-
 /// 15) Formatação de Datas
 pub type Data {
-  Data(dia:Int, ano: Int, mes:Int)
+  Data(dia: Int, ano: Int, mes: Int)
 }
 
-/// Extrai uma Data a partir de *texto*
+/// Extrai uma Data a partir de *texto* no formato “dd/mm/aaaa”
 pub fn extrai_data(texto: String) -> Data {
+  let assert Ok(dia) = int.parse(string.slice(texto, 0, 2))
+  let assert Ok(mes) = int.parse(string.slice(texto, 3, 2))
+  let assert Ok(ano) = int.parse(string.slice(texto, 6, 4))
 
+  Data(dia, ano, mes)
 }
 
 /// Verifica se *data* é 31 de Dezembro
 pub fn ultimo_dia(data: Data) -> Bool {
-  data.dia == 31 && data.mes == 12
+  case data {
+    Data(31, _, 12) -> True
+    _ -> False
+  }
 }
 
 /// Verifica se *data1* vem antes de *data2* no calendário
 pub fn vem_antes(data1: Data, data2: Data) -> Bool {
-  case data1.ano <= data2.ano {
-    False -> False
-    True -> case data1.ano < data2.ano {
-      True -> True
-      False -> case data1.mes <= data2.mes {
+  case data1.ano < data2.ano {
+    True -> True
+    False ->
+      case data1.ano == data2.ano {
         False -> False
-        True -> case data1.mes < data2.mes {
-          True -> True
-          False -> case data1.dia < data2.dia {
+        True ->
+          case data1.mes < data2.mes {
             True -> True
-            False -> False
+            False ->
+              case data1.mes == data2.mes {
+                False -> False
+                True -> data1.dia < data2.dia
+              }
           }
-        }
       }
-    } 
   }
 }
+
+/// 16) Situação Acadêmica
+pub type Situacao {
+  Aprovado
+  Exame
+  Reprovado
+}
+
+/// Retorna uma Situacao para um aluno baseado na média das suas notas,
+/// Aprovados aqueles com média maior que 7, Exame maiores que 4 e menores
+/// que 7 e Reprovados aqueles com menos de 4 pontos.
+pub fn resultado(n1: Float, n2: Float, n3: Float, n4: Float) -> Situacao {
+  let media = { n1 +. n2 +. n3 +. n4 } /. 4.0
+  case media >=. 7.0 {
+    True -> Aprovado
+    False ->
+      case media >=. 4.0 {
+        True -> Exame
+        False -> Reprovado
+      }
+  }
+}
+
+/// 17) 
