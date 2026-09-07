@@ -20,6 +20,7 @@ Quando os valores válidos são um número representável
 São tipos de dados de união(soma) e estrutura(produto) juntando
 
 8) De que forma enumerações e uniões como entrada para funções guiam a criação dos exemplos e a implementação da função?
-T
+Trazem cenários mais explícitos de rumos a serem tomados na especificação
 
 9) Quando devemos utilizar uniões para representar informações?
+Quando dentre os valores enumeráveis, precisamos de informações específicas para determinados valores
