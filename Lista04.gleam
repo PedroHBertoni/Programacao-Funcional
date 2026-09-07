@@ -338,4 +338,102 @@ pub fn relogio(horario: Duracao) -> String {
   }
 }
 
-/// 21)
+/// 21) Tabuleiro
+pub type Posicao {
+  Posicao(x: Int, y: Int)
+}
+
+/// Retorna o máximo possível de espaços a serem andados pelo tabuleiro 10x10
+/// de acordo com a *posi* atual e a *direcao* que está olhando
+pub fn max_passos(posicao: Posicao, direcao: Direcao) -> Int {
+  case direcao {
+    Norte -> 10 - posicao.y
+    Sul -> { posicao.y - 10 } * { -1 }
+    Leste -> 10 - posicao.x
+    Oeste -> { posicao.x - 10 } * { -1 }
+  }
+}
+
+/// 22) Janela em exibição
+pub type Janela {
+  Janela(x_inicio: Int, x_fim: Int, y_inicio: Int, y_fim: Int)
+}
+
+/// Retorna se *click* está dentro de *janela* numa tela 1920x1080
+pub fn clicou(janela: Janela, click: Posicao) -> Bool {
+  click.x >= janela.x_inicio
+  && click.x <= janela.x_fim
+  && click.y >= janela.y_inicio
+  && click.y <= janela.y_fim
+}
+
+/// 23) Jogador no tabuleiro
+pub type Jogador {
+  Jogador(posicao: Posicao, direcao: Direcao)
+}
+
+/// Retorna o mesmo *jogador* mas com sua direção girada 90 graus à direita
+pub fn vira_direita(jogador: Jogador) -> Jogador {
+  let nova_dire: Direcao = prox_horario(jogador.direcao)
+  Jogador(..jogador, direcao: nova_dire)
+}
+
+/// Retorna o mesmo *jogador* mas com sua direção girada 90 graus à esquerda
+pub fn vira_esquerda(jogador: Jogador) -> Jogador {
+  let nova_dire: Direcao = prox_antihorario(jogador.direcao)
+  Jogador(..jogador, direcao: nova_dire)
+}
+
+/// Retorna o mesmo *jogador* mas com sua posição andada para direção em *n* casas.
+/// Caso ultrapasse o limite do tabuleiro 10x10, para na posição 10
+pub fn anda_passos(jogador: Jogador, n: Int) -> Jogador {
+  case jogador.direcao, max_passos(jogador.posicao, jogador.direcao) > n {
+    Norte, True ->
+      Jogador(
+        ..jogador,
+        posicao: Posicao(jogador.posicao.x, jogador.posicao.y + n),
+      )
+    Norte, False -> Jogador(..jogador, posicao: Posicao(jogador.posicao.x, 10))
+    Sul, True ->
+      Jogador(
+        ..jogador,
+        posicao: Posicao(jogador.posicao.x, jogador.posicao.y - n),
+      )
+    Sul, False -> Jogador(..jogador, posicao: Posicao(jogador.posicao.x, 0))
+    Leste, True ->
+      Jogador(
+        ..jogador,
+        posicao: Posicao(jogador.posicao.x + n, jogador.posicao.y),
+      )
+    Leste, False -> Jogador(..jogador, posicao: Posicao(10, jogador.posicao.y))
+    Oeste, True ->
+      Jogador(
+        ..jogador,
+        posicao: Posicao(jogador.posicao.x - n, jogador.posicao.y),
+      )
+    Oeste, False -> Jogador(..jogador, posicao: Posicao(0, jogador.posicao.y))
+  }
+}
+
+/// 24) Desconto Forma de Pagamento
+pub type Pagamento {
+  Pix
+  Dinheiro
+  Boleto
+  Parcelado(parcelas: Int)
+}
+
+/// Retorna o *valor* de compra com suas alterações baseado na *forma* de pagamento
+/// 10% de desconto para pagamento em Pix/Dinheiro, 8% no boleto, até 3 parcelas, preço
+/// integro e mais de 3 parcelas, acréscimo de 12%
+pub fn forma_pagamento(valor: Float, forma: Pagamento) -> Float {
+  case forma {
+    Boleto -> valor *. 0.92
+    Parcelado(_) ->
+      case forma.parcelas > 3 {
+        True -> valor *. 1.12
+        False -> valor
+      }
+    _ -> valor *. 0.9
+  }
+}
