@@ -89,14 +89,29 @@ pub type Resolucao {
   Resolucao(altura: Int, largura: Int)
 }
 
+pub type Aspecto {
+  QuatroPorTres
+  DezesseisPorNove
+  Outro
+}
+
 /// Calcula quantos mega-pixels tem uma imagem na sua resolução
 pub fn mega_pixels(tamanho: Resolucao) -> Int {
   tamanho.altura * tamanho.largura / 1_000_000
 }
 
-///pub type Aspecto
 /// Indica a razão simplificada da resolução, ou, seu aspecto 
-///pub fn verifica_aspecto(_tamanho: Resolucao) {}
+pub fn verifica_aspecto(tamanho: Resolucao) -> Aspecto {
+  case tamanho.largura / 16 == tamanho.altura / 9 {
+    True -> DezesseisPorNove
+    False ->
+      case tamanho.largura / 4 == tamanho.altura / 3 {
+        True -> QuatroPorTres
+        False -> Outro
+      }
+  }
+}
+
 /// Retorna se *imagem* cabe em *tela* em sua resolução]
 pub fn tem_espaco(imagem: Resolucao, tela: Resolucao) -> Bool {
   imagem.largura <= tela.largura && imagem.altura <= tela.altura
@@ -112,7 +127,7 @@ pub type Figura {
 pub fn area(fig: Figura) -> Float {
   case fig {
     Retangulo(_, _) -> fig.altura *. fig.largura
-    Circulo(_) -> fig.raio *. 3.14
+    Circulo(_) -> fig.raio *. fig.raio *. 3.14
   }
 }
 
@@ -214,6 +229,22 @@ pub fn vem_antes(data1: Data, data2: Data) -> Bool {
   }
 }
 
+/// Verifica se uma data não extrapola as limitações do calendário,
+/// evitando um dia não estar presente no mês ou o mês não estar num ano
+pub fn verifica_data(data: Data) -> Bool {
+  data.dia >= 1
+  && case data.mes {
+    1 | 3 | 5 | 7 | 8 | 10 | 12 -> data.dia <= 31
+    4 | 6 | 9 | 11 -> data.dia <= 30
+    2 ->
+      case data.ano % 400 == 0 || { data.ano % 4 == 0 && data.ano % 100 != 0 } {
+        True -> data.dia <= 29
+        False -> data.dia <= 28
+      }
+    _ -> False
+  }
+}
+
 /// 16) Situação Acadêmica
 pub type Situacao {
   Aprovado
@@ -296,14 +327,34 @@ pub type Placar {
   Placar(feitos: Int, sofridos: Int)
 }
 
+pub type Desempenho {
+  Desempenho(pontos: Int, vitorias: Int, saldo_gols: Int)
+}
+
 /// Atualiza os *pontos* de um time com base no último placar
-pub fn att_desempenho(pontos: Int, jogo: Placar) -> Int {
-  case jogo.feitos > jogo.sofridos {
-    True -> pontos + 3
+pub fn att_desempenho(desempenho: Desempenho, jogo: Placar) -> Desempenho {
+  let saldo_jogo = jogo.feitos - jogo.sofridos
+  case saldo_jogo > 0 {
+    True ->
+      Desempenho(
+        desempenho.pontos + 3,
+        desempenho.vitorias + 1,
+        desempenho.saldo_gols + saldo_jogo,
+      )
     False ->
-      case jogo.feitos == jogo.sofridos {
-        True -> pontos + 1
-        False -> pontos
+      case saldo_jogo == 0 {
+        True ->
+          Desempenho(
+            desempenho.pontos + 1,
+            desempenho.vitorias,
+            desempenho.saldo_gols + saldo_jogo,
+          )
+        False ->
+          Desempenho(
+            desempenho.pontos,
+            desempenho.vitorias,
+            desempenho.saldo_gols + saldo_jogo,
+          )
       }
   }
 }
@@ -365,6 +416,14 @@ pub fn clicou(janela: Janela, click: Posicao) -> Bool {
   && click.x <= janela.x_fim
   && click.y >= janela.y_inicio
   && click.y <= janela.y_fim
+}
+
+// Verifica se duas janelas se sobrepõe
+pub fn janelas_sobrepostas(janela1: Janela, janela2: Janela) -> Bool {
+  { janela1.x_inicio < janela2.x_inicio && janela1.x_fim < janela2.x_inicio }
+  || { janela2.x_inicio < janela1.x_inicio && janela2.x_fim < janela1.x_inicio }
+  || { janela1.y_inicio < janela2.y_inicio && janela1.y_fim < janela2.y_inicio }
+  || { janela2.y_inicio < janela1.y_inicio && janela2.y_fim < janela1.y_inicio }
 }
 
 /// 23) Jogador no tabuleiro
@@ -435,5 +494,38 @@ pub fn forma_pagamento(valor: Float, forma: Pagamento) -> Float {
         False -> valor
       }
     _ -> valor *. 0.9
+  }
+}
+
+/// 25) Encomenda de Correio
+pub type Embalagem {
+  Envelope(comprimento: Float, largura: Float)
+  Caixa(comprimento: Float, largura: Float, altura: Float)
+  Rolo(comprimento: Float, diametro: Float)
+}
+
+/// Verifica se uma embalagem está válida de acordo com os valores solicitados
+pub fn valida_embalagem(encomenda: Embalagem) -> Bool {
+  case encomenda {
+    Envelope(_, _) ->
+      encomenda.comprimento >=. 16.0
+      && encomenda.comprimento <=. 60.0
+      && encomenda.largura >=. 11.0
+      && encomenda.largura <=. 60.0
+    Caixa(_, _, _) ->
+      encomenda.comprimento >=. 15.0
+      && encomenda.comprimento <=. 100.0
+      && encomenda.largura >=. 10.0
+      && encomenda.largura <=. 100.0
+      && encomenda.altura >=. 1.0
+      && encomenda.altura <=. 100.0
+      && { encomenda.comprimento +. encomenda.largura +. encomenda.altura }
+      <=. 200.0
+    Rolo(_, _) ->
+      encomenda.comprimento >=. 18.0
+      && encomenda.comprimento <=. 100.0
+      && encomenda.diametro >=. 5.0
+      && encomenda.diametro <=. 91.0
+      && { encomenda.comprimento +. { 2.0 *. encomenda.diametro } } <=. 200.0
   }
 }
