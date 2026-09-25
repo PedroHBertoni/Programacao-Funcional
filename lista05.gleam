@@ -79,8 +79,3 @@ pub fn nao_decresce_examples() {
   check.eq(nao_decresce([1, 2, 2]), True)
   check.eq(nao_decresce([1, 2, 1]), False)
 }
-
-/// 12) Inverte os elementos de uma lista
-pub fn inverte_lista(lista: List) ->
-
-pub fn aux_
