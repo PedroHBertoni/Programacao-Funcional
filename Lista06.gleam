@@ -628,6 +628,108 @@ pub fn itens_classe_examples() {
 }
 
 ///
+/// 24) Representação Visual de um sistema de arquivos como *entrada*
+///
+pub type Entrada {
+  Arquivo(nome: String)
+  Diretorio(nome: String, entradas: List(Entrada))
+}
+
+pub fn representar_entrada(entrada: Entrada) -> List(String) {
+  case entrada {
+    Arquivo(nome) -> [nome]
+    Diretorio(nome, entradas) -> [
+      nome <> "/",
+      ..representar_filhos(entradas, "")
+    ]
+  }
+}
+
+///
+/// auxiliar -> representar_entrada
+/// Representa os arquivos e diretórios contidos em uma entrada
+pub fn representar_filhos(
+  entradas: List(Entrada),
+  prefixo: String,
+) -> List(String) {
+  case entradas {
+    [] -> []
+    [primeira, ..resto] -> {
+      let ultimo = resto == []
+      list.append(
+        representar_item(primeira, prefixo, ultimo),
+        representar_filhos(resto, prefixo),
+      )
+    }
+  }
+}
+
+///
+/// auxiliar -> representar_filhos
+/// Representa uma entrada e, caso seja um diretório, representa também suas entradas internas
+pub fn representar_item(
+  entrada: Entrada,
+  prefixo: String,
+  ultimo: Bool,
+) -> List(String) {
+  let linha = prefixo <> "+- " <> nome_entrada(entrada)
+
+  let proximo_prefixo = case ultimo {
+    True -> prefixo <> "    "
+    False -> prefixo <> "| "
+  }
+
+  let filhos = case entrada {
+    Arquivo(_) -> []
+    Diretorio(_, entradas) -> representar_filhos(entradas, proximo_prefixo)
+  }
+
+  [linha, ..filhos]
+}
+
+/// auxiliar -> representar_item
+/// Retorna o nome de um arquivo ou diretório
+pub fn nome_entrada(entrada: Entrada) -> String {
+  case entrada {
+    Arquivo(nome) -> nome
+    Diretorio(nome, _) -> nome <> "/"
+  }
+}
+
+pub fn representar_entrada_examples() {
+  check.eq(representar_entrada(Arquivo("anotacoes.txt")), ["anotacoes.txt"])
+
+  check.eq(representar_entrada(Diretorio("disciplinas", [])), ["disciplinas/"])
+
+  check.eq(
+    representar_entrada(
+      Diretorio("disciplinas", [
+        Diretorio("12026", [
+          Arquivo("alunos.txt"),
+          Diretorio("trabs", [
+            Arquivo("trab1.md"),
+            Diretorio("correcoes", [
+              Arquivo("rascunho.txt"),
+              Arquivo("final.txt"),
+            ]),
+            Arquivo("trab2.md"),
+          ]),
+        ]),
+        Diretorio("6879", []),
+        Diretorio("6884", []),
+        Arquivo("anotacoes.txt"),
+      ]),
+    ),
+    [
+      "disciplinas/", "+- 12026/", "| +- alunos.txt", "| +- trabs/",
+      "|     +- trab1.md", "|     +- correcoes/", "|     | +- rascunho.txt",
+      "|     | +- final.txt", "|     +- trab2.md", "+- 6879/", "+- 6884/",
+      "+- anotacoes.txt",
+    ],
+  )
+}
+
+///
 /// 25) Determina se *lsta* é prefixo de *lstb*
 ///
 pub fn lista_prefixo(lsta: List(Int), lstb: List(Int)) -> Bool {
