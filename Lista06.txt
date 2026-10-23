@@ -1,0 +1,17 @@
+1) Quando devemos ver um número natural como um dado composto?
+Quando uma iteração precisa ser realizada com base no valor do número.
+
+2) Qual é o modelo de função associado com a definição do tipo natural?
+Verificar o caso base (0) e, caso contrário, resolver o problema para n-1, considerando que n deve ser não negativo.
+
+3) O que é recursão estrutural?
+É a recursão feita a partir da decomposição natural do dado, utilizando suas partes autorreferenciadas.
+
+4) Quando não podemos utilizar recursão estrutural para resolver um problema?
+Quando a solução do problema original não pode ser obtida a partir da solução do subproblema estrutural.
+
+5) Quais estratégias podemos utilizar quando a recursão estrutural não pode ser usada?
+Redefinir o problema, utilizar recursão generativa ou criar um plano com etapas para chegar à solução.
+
+6) O que é recursão generativa?
+É a recursão que utiliza subproblemas obtidos por uma decomposição não estrutural dos dados.
