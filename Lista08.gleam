@@ -1,5 +1,6 @@
 import gleam/int
-
+import gleam/list
+import gleam/string
 import sgleam/check
 
 /// 1) O que significa dizer que funções são entidades de primeira classe?
@@ -28,7 +29,57 @@ import sgleam/check
 /// 8) Qual é o uso mais comum para funções que produzem funções?
 /// Criar funções parametrizadas, fixando alguns de seus parâmetros
 ///
-/// 9) 10 -> list.length(list.filter(lst))
+/// 9) Reescrever funções com map, filter, fold_right
+/// As novas funções ficam mais simples, só é necessário se acostumar com o uso dessas novas
+pub fn tamanhos(lst: List(String)) -> List(Int) {
+  case lst {
+    [] -> []
+    [primeiro, ..resto] -> [string.length(primeiro), ..tamanhos(resto)]
+  }
+}
+
+pub fn novo_tamanhos(lst: List(String)) -> List(Int) {
+  list.map(lst, string.length)
+}
+
+///
+pub fn tamanho_total(lst: List(Int)) -> Int {
+  case lst {
+    [] -> 0
+    [primeiro, ..resto] -> primeiro + tamanho_total(resto)
+  }
+}
+
+pub fn novo_tamanho_total(lst: List(Int)) -> Int {
+  list.fold_right(lst, 0, fn(num, a) { num + a })
+}
+
+///
+pub fn quant_notas_maiores(notas: List(Float)) -> Int {
+  case notas {
+    [] -> 0
+    [primeira, ..resto] ->
+      case primeira >. 9.0 {
+        True -> 1 + quant_notas_maiores(resto)
+        False -> quant_notas_maiores(resto)
+      }
+  }
+}
+
+pub fn novo_quant_notas_maiores(notas: List(Float)) -> Int {
+  list.length(list.filter(notas, fn(nota) { nota >. 9.0 }))
+}
+
+pub fn novos_examples() {
+  check.eq(tamanhos(["Olá", "Prof", "Igarashi"]), [3, 4, 8])
+  check.eq(novo_tamanhos(["Olá", "Prof", "Igarashi"]), [3, 4, 8])
+  check.eq(tamanho_total([3, 4, 8]), 15)
+  check.eq(novo_tamanho_total([3, 4, 8]), 15)
+  check.eq(quant_notas_maiores([10.0, 10.0, 9.1, 9.0, 8.0]), 3)
+  check.eq(novo_quant_notas_maiores([10.0, 10.0, 9.1, 9.0, 8.0]), 3)
+}
+
+/// 10 -> list.length(list.filter(lst))
 /// 11 -> 
 ///
 /// 10) Aplica uma função *predicado* sobre os elementos de *lst* retornando quantos
@@ -156,10 +207,28 @@ pub fn reduz_ate_examples() {
 }
 
 ///
-/// 13)
+/// 13) Abstrai o comportamento das funções de tratamento de numeros naturais
 ///
-pub fn num_reduz()
+pub fn num_reduz(n: Int, init: a, f: fn(Int, a) -> a) -> a {
+  case n {
+    _ if n <= 0 -> init
+    _ -> f(n, num_reduz(n - 1, init, f))
+  }
+}
 
-pub fn _examples() {
-  check.eq()
+/// Exemplo
+pub fn soma_nat(n: Int) -> Int {
+  case n {
+    _ if n <= 0 -> 0
+    _ -> n + soma_nat(n - 1)
+  }
+}
+
+pub fn novo_soma_nat(n: Int) -> Int {
+  num_reduz(n, 0, fn(i, a) { i + a })
+}
+
+pub fn num_reduz_examples() {
+  check.eq(soma_nat(4), 10)
+  check.eq(novo_soma_nat(4), 10)
 }
